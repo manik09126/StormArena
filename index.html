@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StormArena - Free Fire Tournament App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e1e2f, #0a0a0f);
+      color: #fff;
+      padding: 0 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    header h1 {
+      font-size: 3.5em;
+      color: #00f2fe;
+      text-shadow: 0 0 20px #00f2fe88;
+    }
+
+    header p {
+      font-size: 1.2em;
+      color: #ccc;
+      margin-top: 15px;
+    }
+
+    .cta-button {
+      background: linear-gradient(to right, #00f2fe, #4facfe);
+      color: #000;
+      padding: 15px 35px;
+      border-radius: 50px;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 25px;
+      box-shadow: 0 0 15px #00f2fe88;
+      transition: 0.3s;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.05);
+    }
+
+    section {
+      margin-top: 60px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2.2em;
+      color: #00f2fe;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00f2fe55;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      padding: 0 20px;
+    }
+
+    .feature {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 25px;
+      border-radius: 20px;
+      width: 280px;
+      box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .screenshots img {
+      width: 300px;
+      margin: 10px;
+      border-radius: 15px;
+      border: 2px solid #00f2fe33;
+      transition: 0.3s;
+    }
+
+    .review {
+      background-color: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 15px;
+      width: 85%;
+      margin: 15px auto;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #ddd;
+      backdrop-filter: blur(10px);
+    }
+
+    .app-info {
+      max-width: 800px;
+      margin: auto;
+      color: #ccc;
+      font-size: 1em;
+      padding: 0 20px;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 20px;
+      margin: 20px auto;
+      max-width: 90%;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .countdown {
+      font-size: 1.5em;
+      color: #00f2fe;
+      margin-top: 15px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 10px #25d366;
+      z-index: 1000;
+      transition: 0.3s;
+    }
+
+    .whatsapp:hover {
+      background-color: #1ebea5;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2.2em;
+      }
+
+      .features {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .screenshots img {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <h1>StormArena</h1>
+  <p>Free Fire টুর্নামেন্ট খেলার জন্য বাংলাদেশের একমাত্র প্রিমিয়াম অ্যাপ!</p>
+  <a href="https://example.com/stormarena.apk" class="cta-button">📥 এখনই ডাউনলোড করো</a>
+  <div class="countdown" id="countdown-timer"></div>
+</header>
+
+<!-- App Info -->
+<section>
+  <h2>অ্যাপ সম্পর্কে</h2>
+  <div class="app-info">
+    <p>StormArena অ্যাপটি ডিজাইন করা হয়েছে গেমারদের জন্য যারা Free Fire খেলায় পারদর্শী এবং প্রতিযোগিতা করতে চায় দেশের সেরা প্লেয়ারদের সঙ্গে। টুর্নামেন্ট, পুরস্কার, স্কিন ও আরও অনেক এক্সক্লুসিভ সুযোগ-সুবিধা নিয়ে আসছে StormArena।</p>
+  </div>
+</section>
+
+<!-- Features -->
+<section>
+  <h2>🔥 অ্যাপ ফিচারস</h2>
+  <div class="features">
+    <div class="feature">
+      <h3>⚔️ রিয়েল-টাইম যুদ্ধ</h3>
+      <p>লাইভ টুর্নামেন্টে অংশ নাও এবং প্রতিপক্ষকে হারাও!</p>
+    </div>
+    <div class="feature">
+      <h3>🎨 কাস্টম স্কিন</h3>
+      <p>তোমার যোদ্ধাকে সাজাও নিজের মতো করে!</p>
+    </div>
+    <div class="feature">
+      <h3>🌍 গ্লোবাল র‍্যাঙ্কিং</h3>
+      <p>শীর্ষে উঠে যাও এবং জিতে নাও রিওয়ার্ড!</p>
+    </div>
+  </div>
+</section>
+
+<!-- Screenshots -->
+<section class="screenshots">
+  <h2>📱 স্ক্রিনশট</h2>
+  <img src="https://via.placeholder.com/300x600.png?text=Screenshot+1" alt="Screenshot 1">
+  <img src="https://via.placeholder.com/300x600.png?text=Screenshot+2" alt="Screenshot 2">
+</section>
+
+<!-- Video Trailer -->
+<section>
+  <h2>🎥 ট্রেলার</h2>
+  <div class="video-container">
+    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
+  </div>
+</section>
+
+<!-- Reviews -->
+<section>
+  <h2>💬 ইউজার রিভিউ</h2>
+  <div class="review">⭐⭐⭐⭐⭐<br>"StormArena-এ টুর্নামেন্ট খেলে পুরস্কার জিতেছি! এটা দারুণ!" – মেহেদী</div>
+  <div class="review">⭐⭐⭐⭐☆<br>"বাংলাদেশি টুর্নামেন্ট অ্যাপ এর মধ্যে এটা আমার ফেভারিট!" – রিমি</div>
+</section>
+
+<!-- Footer -->
+<footer>
+  © 2025 StormArena. All rights reserved.
+</footer>
+
+<!-- WhatsApp Button -->
+<a href="https://wa.me/8801XXXXXXXXX" class="whatsapp" target="_blank">💬 Support</a>
+
+<!-- Countdown Script -->
+<script>
+  const tournamentDate = new Date("2025-08-15T18:00:00").getTime();
+  const timer = document.getElementById("countdown-timer");
+
+  setInterval(() => {
+    const now = new Date().getTime();
+    const distance = tournamentDate - now;
+
+    if (distance < 0) {
+      timer.innerHTML = "✅ টুর্নামেন্ট শুরু হয়েছে!";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    timer.innerHTML = `টুর্নামেন্ট শুরু হতে বাকি: ${days} দিন ${hours} ঘণ্টা ${minutes} মিনিট ${seconds} সেকেন্ড`;
+  }, 1000);
+</script>
+
+</body>
+</html>
