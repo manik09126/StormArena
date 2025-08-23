@@ -1,275 +1,862 @@
 <!DOCTYPE html>
-<html lang="bn">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StormArena - Free Fire Tournament App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS TOUR - Free Fire Tournament App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&amp;family=Teko:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <!-- Firebase App (core) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+        :root {
+            --primary: #ff4655;
+            --secondary: #0f1923;
+            --accent: #1e40af;
+            --gold: #ffd700;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gradient: linear-gradient(135deg, #ff4655, #1e40af);
+            --gold-gradient: linear-gradient(135deg, #ffd700, #ff8c00);
+        }
 
-    body {
-      background: radial-gradient(circle at top, #1e1e2f, #0a0a0f);
-      color: #fff;
-      padding: 0 20px;
-    }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    header {
-      text-align: center;
-      padding: 80px 20px 40px;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    header h1 {
-      font-size: 3.5em;
-      color: #00f2fe;
-      text-shadow: 0 0 20px #00f2fe88;
-    }
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 25, 35, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
 
-    header p {
-      font-size: 1.2em;
-      color: #ccc;
-      margin-top: 15px;
-    }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .cta-button {
-      background: linear-gradient(to right, #00f2fe, #4facfe);
-      color: #000;
-      padding: 15px 35px;
-      border-radius: 50px;
-      font-size: 1.2em;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 25px;
-      box-shadow: 0 0 15px #00f2fe88;
-      transition: 0.3s;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .cta-button:hover {
-      transform: scale(1.05);
-    }
+        .logo-text {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(255, 70, 85, 0.5);
+        }
 
-    section {
-      margin-top: 60px;
-      text-align: center;
-    }
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 5px rgba(255, 70, 85, 0.5));
+        }
 
-    h2 {
-      font-size: 2.2em;
-      color: #00f2fe;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #00f2fe55;
-    }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
 
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-      padding: 0 20px;
-    }
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
 
-    .feature {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 25px;
-      border-radius: 20px;
-      width: 280px;
-      box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
+        nav a:hover {
+            color: var(--primary);
+        }
 
-    .screenshots img {
-      width: 300px;
-      margin: 10px;
-      border-radius: 15px;
-      border: 2px solid #00f2fe33;
-      transition: 0.3s;
-    }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
 
-    .review {
-      background-color: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 15px;
-      width: 85%;
-      margin: 15px auto;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #ddd;
-      backdrop-filter: blur(10px);
-    }
+        nav a:hover::after {
+            width: 100%;
+        }
 
-    .app-info {
-      max-width: 800px;
-      margin: auto;
-      color: #ccc;
-      font-size: 1em;
-      padding: 0 20px;
-    }
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 20px;
-      margin: 20px auto;
-      max-width: 90%;
-    }
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+            background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') center/cover no-repeat;
+        }
 
-    .video-container iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
 
-    .countdown {
-      font-size: 1.5em;
-      color: #00f2fe;
-      margin-top: 15px;
-    }
+        .hero-text {
+            flex: 1;
+            animation: fadeInUp 1s ease-out;
+        }
 
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      font-size: 0.9em;
-      color: #aaa;
-    }
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            animation: fadeInRight 1s ease-out;
+        }
 
-    .whatsapp {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #25d366;
-      color: white;
-      padding: 15px 20px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 0 10px #25d366;
-      z-index: 1000;
-      transition: 0.3s;
-    }
+        .hero-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 70, 85, 0.3);
+        }
 
-    .whatsapp:hover {
-      background-color: #1ebea5;
-    }
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #cbd5e1;
+        }
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2.2em;
-      }
+        .hero-description {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
 
-      .features {
-        flex-direction: column;
-        align-items: center;
-      }
+        .user-count {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 15px 25px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: fit-content;
+        }
 
-      .screenshots img {
-        width: 90%;
-      }
-    }
-  </style>
+        .user-count i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .user-count-text {
+            font-size: 1.1rem;
+        }
+
+        .user-count-number {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 70, 85, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(255, 70, 85, 0.4);
+        }
+
+        .app-image {
+            max-width: 100%;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+            transition: transform 0.5s;
+            border-radius: 30px;
+        }
+
+        .app-image:hover {
+            transform: translateY(-10px) rotate(5deg);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Teko', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+            transition: height 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card:hover:before {
+            height: 8px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            background: rgba(255, 70, 85, 0.1);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .feature-description {
+            color: #cbd5e1;
+        }
+
+        /* Download Section */
+        .download {
+            padding: 100px 0;
+            text-align: center;
+            background: var(--dark);
+            position: relative;
+        }
+
+        .download-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s, background 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .download-btn:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .download-icon {
+            font-size: 2.5rem;
+        }
+
+        .download-text {
+            text-align: left;
+        }
+
+        .download-text span {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .download-text strong {
+            font-size: 1.3rem;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin-top: 30px;
+        }
+
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+        }
+
+        .qr-text {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #000;
+        }
+
+        .download-info {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .download-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .download-info p {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            padding: 50px 0 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                left: -50%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Particle Animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100vw) rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-description {
+                margin: 0 auto 40px;
+            }
+
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .hero-image {
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 15px;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .download-title {
+                font-size: 3rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo-text {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .download-btn {
+                padding: 15px 25px;
+            }
+
+            .download-text strong {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Particle Background Animation -->
+    <div class="particles" id="particles"></div>
 
-<!-- Header -->
-<header>
-  <h1>StormArena</h1>
-  <p>Free Fire টুর্নামেন্ট খেলার জন্য বাংলাদেশের একমাত্র প্রিমিয়াম অ্যাপ!</p>
-  <a href="https://example.com/stormarena.apk" class="cta-button">📥 এখনই ডাউনলোড করো</a>
-  <div class="countdown" id="countdown-timer"></div>
-</header>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-crosshairs logo-icon"></i>
+                <div class="logo-text">OS TOUR</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#download">Download</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<!-- App Info -->
-<section>
-  <h2>অ্যাপ সম্পর্কে</h2>
-  <div class="app-info">
-    <p>StormArena অ্যাপটি ডিজাইন করা হয়েছে গেমারদের জন্য যারা Free Fire খেলায় পারদর্শী এবং প্রতিযোগিতা করতে চায় দেশের সেরা প্লেয়ারদের সঙ্গে। টুর্নামেন্ট, পুরস্কার, স্কিন ও আরও অনেক এক্সক্লুসিভ সুযোগ-সুবিধা নিয়ে আসছে StormArena।</p>
-  </div>
-</section>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Join The Ultimate Free Fire Tournament</h1>
+                <p class="hero-subtitle">Compete. Win. Conquer.</p>
+                <p class="hero-description">OS TOUR is the premier platform for Free Fire tournaments. Join thousands of players, compete in daily tournaments, and win amazing prizes. Download now and start your journey to become a Free Fire champion!</p>
+                
+                <div class="user-count">
+                    <i class="fas fa-users"></i>
+                    <div class="user-count-text">
+                        <span>Active Users: </span>
+                        <span class="user-count-number" id="userCount">15,600+</span>
+                    </div>
+                </div>
+                
+                <a href="#download" class="cta-button">Download Now <i class="fas fa-arrow-down"></i></a>
+            </div>
+            <div class="hero-image">
+                <img src="logo.jpg" alt="OS TOUR App" class="app-image">
+            </div>
+        </div>
+    </section>
 
-<!-- Features -->
-<section>
-  <h2>🔥 অ্যাপ ফিচারস</h2>
-  <div class="features">
-    <div class="feature">
-      <h3>⚔️ রিয়েল-টাইম যুদ্ধ</h3>
-      <p>লাইভ টুর্নামেন্টে অংশ নাও এবং প্রতিপক্ষকে হারাও!</p>
-    </div>
-    <div class="feature">
-      <h3>🎨 কাস্টম স্কিন</h3>
-      <p>তোমার যোদ্ধাকে সাজাও নিজের মতো করে!</p>
-    </div>
-    <div class="feature">
-      <h3>🌍 গ্লোবাল র‍্যাঙ্কিং</h3>
-      <p>শীর্ষে উঠে যাও এবং জিতে নাও রিওয়ার্ড!</p>
-    </div>
-  </div>
-</section>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Premium Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="feature-title">Daily Tournaments</h3>
+                    <p class="feature-description">Join daily tournaments with cash prizes and exclusive rewards for top players.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Team Matchmaking</h3>
+                    <p class="feature-description">Find the perfect teammates with our advanced matchmaking system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Live Statistics</h3>
+                    <p class="feature-description">Track your performance with real-time stats and leaderboards.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3 class="feature-title">Premium Rewards</h3>
+                    <p class="feature-description">Win exclusive skins, diamonds, and other in-game items.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3 class="feature-title">Live Streaming</h3>
+                    <p class="feature-description">Stream your matches directly to your followers and build your audience.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Anti-Cheat System</h3>
+                    <p class="feature-description">Play fair games with our advanced anti-cheat protection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Screenshots -->
-<section class="screenshots">
-  <h2>📱 স্ক্রিনশট</h2>
-  <img src="https://via.placeholder.com/300x600.png?text=Screenshot+1" alt="Screenshot 1">
-  <img src="https://via.placeholder.com/300x600.png?text=Screenshot+2" alt="Screenshot 2">
-</section>
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="container">
+            <h2 class="download-title">Download Now</h2>
+            <div class="download-options">
+                <a href="ostour.apk" class="download-btn">
+                    <i class="fas fa-download download-icon"></i>
+                    <div class="download-text">
+                        <span>Direct Download</span>
+                        <strong>os.apk (v2.1.5)</strong>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="download-info">
+                <h3>Download Instructions</h3>
+                <p>1. Click the download button above</p>
+                <p>2. Allow installation from unknown sources when prompted</p>
+                <p>3. Install the app and open it</p>
+                <p>4. Create your account and start playing tournaments!</p>
+            </div>
+            
+            <div class="qr-code">
+                <img src="frame.png" alt="Download QR Code">
+                <p class="qr-text">Scan to download</p>
+            </div>
+        </div>
+    </section>
 
-<!-- Video Trailer -->
-<section>
-  <h2>🎥 ট্রেলার</h2>
-  <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
-  </div>
-</section>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">OS TOUR</div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 OS TOUR - Free Fire Tournament Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-<!-- Reviews -->
-<section>
-  <h2>💬 ইউজার রিভিউ</h2>
-  <div class="review">⭐⭐⭐⭐⭐<br>"StormArena-এ টুর্নামেন্ট খেলে পুরস্কার জিতেছি! এটা দারুণ!" – মেহেদী</div>
-  <div class="review">⭐⭐⭐⭐☆<br>"বাংলাদেশি টুর্নামেন্ট অ্যাপ এর মধ্যে এটা আমার ফেভারিট!" – রিমি</div>
-</section>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6ao4Hd-XG9SiBOZFHGCZs_0xdlyelDKg",
+            authDomain: "mqndjueii.firebaseapp.com",
+            databaseURL: "https://mqndjueii-default-rtdb.firebaseio.com",
+            projectId: "mqndjueii",
+            storageBucket: "mqndjueii.firebasestorage.app",
+            messagingSenderId: "252977114250",
+            appId: "1:252977114250:web:9431d076ace5372408d173",
+            measurementId: "G-WY6YFKZ2MX"
+        };
 
-<!-- Footer -->
-<footer>
-  © 2025 StormArena. All rights reserved.
-</footer>
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-<!-- WhatsApp Button -->
-<a href="https://wa.me/8801XXXXXXXXX" class="whatsapp" target="_blank">💬 Support</a>
+        // Create particle background
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const colors = ['#ff4655', '#1e40af', '#f8fafc', '#0f1923'];
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 20 + 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = color;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
 
-<!-- Countdown Script -->
-<script>
-  const tournamentDate = new Date("2025-08-15T18:00:00").getTime();
-  const timer = document.getElementById("countdown-timer");
+            // Get user count from Firebase
+            db.collection("ZIHAD_USERS").get().then((querySnapshot) => {
+                const userCount = querySnapshot.size;
+                // Display 15,600+ users as requested
+                document.getElementById('userCount').textContent = "15,600+";
+            });
 
-  setInterval(() => {
-    const now = new Date().getTime();
-    const distance = tournamentDate - now;
+            // Add scroll animation for elements
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
 
-    if (distance < 0) {
-      timer.innerHTML = "✅ টুর্নামেন্ট শুরু হয়েছে!";
-      return;
-    }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 1s forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
 
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // Observe feature cards
+            document.querySelectorAll('.feature-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
 
-    timer.innerHTML = `টুর্নামেন্ট শুরু হতে বাকি: ${days} দিন ${hours} ঘণ্টা ${minutes} মিনিট ${seconds} সেকেন্ড`;
-  }, 1000);
-</script>
-
-</body>
-</html>
+</body></html>
